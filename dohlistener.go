@@ -216,10 +216,10 @@ func (s *DoHListener) extractClientAddress(r *http.Request) net.IP {
 		return clientIP
 	}
 
-	// If our client is a reverse proxy then use the last entry in X-Forwarded-For.
+	// If our client is a reverse proxy then use the first entry in X-Forwarded-For.
 	chain := strings.Split(xForwardedFor, ", ")
 	if clientIP != nil && s.opt.HTTPProxyNet.Contains(clientIP) {
-		if ip := net.ParseIP(chain[len(chain)-1]); ip != nil {
+		if ip := net.ParseIP(chain[0]); ip != nil {
 			// Ignore XFF whe the client is local to the proxy.
 			if !ip.IsLoopback() {
 				return ip
